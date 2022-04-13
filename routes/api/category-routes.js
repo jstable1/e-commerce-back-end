@@ -7,17 +7,15 @@ router.get('/', (req, res) => {
   // find all categories
   Category.findAll({
      // be sure to include its associated Products
-    include: [
-      {
-        model: Category,
-        attributes: ['id', 'category_name']
-      }
+    attributes: [
+      'id',
+      'category_name'
     ],
     include: [
       {
         model: Product,
         attributes: ['product_name']
-      }
+      },
     ]
   })
     .then(dbCategoryData => res.json(dbCategoryData))
@@ -32,9 +30,15 @@ router.get('/:id', (req, res) => {
   Category.findOne({
     where: {
       id: req.params.id
-    }
+    },
+    // be sure to include its associated Products
+    include: [
+      {
+        model: Product,
+        attributes: ['product_name']
+      }
+    ]
   })
-  // be sure to include its associated Products
   .then(dbCategoryData => {
     if (!dbCategoryData) {
       res.status(404).json({ message: 'No category found with this id' });
